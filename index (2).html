@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Contactos, reservas, trámites y registro de residentes del Condominio Edificio Colbún.">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Comunidad Edificio Colbún</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: encabezado con el nombre y la dirección, un buscador "¿A quién contacto?" como pieza central,
+   y luego tarjetas por tema (contactos, reservas, trámites, seguridad, convivencia, registro). Pensado para el celular. */
+:root {
+  --bg: #F1F4F7;
+  --surface: #FFFFFF;
+  --ink: #12212D;
+  --muted: #56677A;
+  --line: #D8E0E8;
+  --accent: #0A5C86;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E1EFF7;
+  --warn: #8A4B00;
+  --warn-soft: #FBEBD3;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C1721; --surface: #132330; --ink: #E6EEF4; --muted: #9DAEBC; --line: #263A4A;
+    --accent: #62B8E0; --accent-ink: #08202D; --accent-soft: #173446; --warn: #F0B665; --warn-soft: #3A2A12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C1721; --surface: #132330; --ink: #E6EEF4; --muted: #9DAEBC; --line: #263A4A;
+  --accent: #62B8E0; --accent-ink: #08202D; --accent-soft: #173446; --warn: #F0B665; --warn-soft: #3A2A12;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+}
+.wrap { max-width: 980px; margin-inline: auto; padding-inline: 16px; padding-block: 24px 48px; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* Encabezado */
+.top { display: flex; flex-direction: column; gap: 6px; padding-block: 8px; }
+.eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.top h1 { font-size: clamp(30px, 7vw, 48px); font-weight: 700; }
+.top .addr { color: var(--muted); }
+.nav { display: flex; gap: 8px; overflow-x: auto; padding-block: 4px; scrollbar-width: thin; }
+.nav a { white-space: nowrap; text-decoration: none; color: var(--ink); background: var(--surface); border: 1px solid var(--line); padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; }
+.nav a:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Buscador de contacto */
+.finder { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.finder h2 { font-size: clamp(22px, 5vw, 30px); }
+.finder .sub { color: var(--muted); font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.answer { background: var(--accent-soft); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.answer .who { font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.answer .why { font-size: 15px; color: var(--muted); }
+
+/* Filas de contacto */
+.rows { display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.row .lab { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; display: block; }
+.row .val { font-family: var(--font-mono); font-size: 14.5px; overflow-wrap: anywhere; user-select: all; }
+.row .txt { min-width: 0; }
+.copy { flex: none; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; background: var(--surface); color: var(--accent); border: 1px solid var(--line); padding: 6px 12px; border-radius: 8px; }
+.copy:hover { border-color: var(--accent); }
+.btn { display: inline-block; text-decoration: none; font-weight: 600; background: var(--accent); color: var(--accent-ink); padding: 10px 18px; border-radius: 10px; align-self: flex-start; }
+.btn:hover { filter: brightness(1.08); }
+
+/* Secciones */
+section { display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 16px; }
+section > h2 { font-size: clamp(22px, 5vw, 28px); }
+section > .lead { color: var(--muted); max-width: 65ch; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.card h3 { font-size: 18px; }
+.card p, .card li { font-size: 15px; }
+.card .note { color: var(--muted); font-size: 14px; }
+.card ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.warn { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 12px 14px; font-size: 14.5px; font-weight: 500; }
+.tag { align-self: flex-start; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: var(--accent); }
+
+.register { background: var(--accent); color: var(--accent-ink); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+.register h2 { font-size: clamp(22px, 5vw, 28px); }
+.register p { max-width: 60ch; }
+.register .btn { background: var(--accent-ink); color: var(--accent); }
+.register a:focus-visible { outline-color: var(--accent-ink); }
+
+footer { color: var(--muted); font-size: 14px; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 18px; }
+@media (prefers-reduced-motion: no-preference) { .chip, .copy, .btn { transition: border-color .15s, filter .15s, background .15s; } }
+</style>
+
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <span class="eyebrow">Condominio · Cerrillos</span>
+    <h1>Comunidad Edificio Colbún</h1>
+    <p class="addr">Av. Lo Errázuriz 2441, Cerrillos</p>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#contactos">Contactos</a>
+      <a href="#reservas">Reservas</a>
+      <a href="#tramites">Gastos comunes y mudanzas</a>
+      <a href="#seguridad">Seguridad</a>
+      <a href="#convivencia">Convivencia</a>
+      <a href="#registro">Registro de residentes</a>
+    </nav>
+  </header>
+
+  <div class="finder" id="finder">
+    <h2>¿A quién contacto?</h2>
+    <p class="sub">Elige tu tema y te mostramos quién lo resuelve.</p>
+    <div class="chips" id="chips" role="group" aria-label="Temas"></div>
+    <div class="answer" id="answer" aria-live="polite"></div>
+  </div>
+
+  <section id="contactos">
+    <h2>Contactos principales</h2>
+    <p class="lead">El Comité y la Administración cumplen funciones distintas. Para lo cotidiano, escribe primero a la Administración.</p>
+    <div class="grid">
+      <article class="card">
+        <span class="tag">Edificio</span>
+        <h3>Administración, REIC Administradora</h3>
+        <p class="note">Administrador de la comunidad: José Cartagena</p>
+        <div class="rows">
+          <div class="row"><div class="txt"><span class="lab">Correo oficial</span><span class="val">adm.colbun@gmail.com</span></div><button class="copy" data-copy="adm.colbun@gmail.com">Copiar</button></div>
+          <div class="row"><div class="txt"><span class="lab">WhatsApp operativo</span><span class="val">+56 9 8659 7307</span></div><button class="copy" data-copy="+56 9 8659 7307">Copiar</button></div>
+          <div class="row"><div class="txt"><span class="lab">Administrador</span><span class="val">+56 9 3868 4969</span></div><button class="copy" data-copy="+56 9 3868 4969">Copiar</button></div>
+        </div>
+        <p class="note">El WhatsApp sirve para mudanzas, reservas, gastos comunes, pagos y comprobantes de transferencia.</p>
+        <p class="warn">Para reclamos o solicitudes que necesiten respaldo formal, usa el correo.</p>
+      </article>
+
+      <article class="card">
+        <span class="tag">Comunidad</span>
+        <h3>Comité de Administración</h3>
+        <p class="note">Para materias propias del Comité. Lo operativo del día a día va primero a la Administración.</p>
+        <div class="rows">
+          <div class="row"><div class="txt"><span class="lab">Correo del Comité</span><span class="val">comite.colbun@gmail.com</span></div><button class="copy" data-copy="comite.colbun@gmail.com">Copiar</button></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <span class="tag">Parque y piscina</span>
+        <h3>Administración del Parque</h3>
+        <p class="warn">La piscina y las áreas comunes del parque no las administra la Administración del edificio. Las gestiona la administración del Parque (Portal Parque Bicentenario).</p>
+        <p class="note">Administrador: Marcelo Arellano</p>
+        <div class="rows">
+          <div class="row"><div class="txt"><span class="lab">Teléfono</span><span class="val">+56 9 9359 9814</span></div><button class="copy" data-copy="+56 9 9359 9814">Copiar</button></div>
+          <div class="row"><div class="txt"><span class="lab">Correo</span><span class="val">marcelo.arellano@empresasgardener.cl</span></div><button class="copy" data-copy="marcelo.arellano@empresasgardener.cl">Copiar</button></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="reservas">
+    <h2>Reservas</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Canchas y quinchos del parque</h3>
+        <p>Se reservan en línea. Los temas de estas instalaciones los ve la Administración del Parque.</p>
+        <a class="btn" href="https://parquecerrillos.agendapro.com/cl/" target="_blank" rel="noopener">Reservar en AgendaPro</a>
+      </article>
+      <article class="card">
+        <h3>Sala Multiuso del edificio</h3>
+        <p>Reserva en la app <strong>Comunidad Feliz</strong>. Después de reservar, pide la llave en Conserjería.</p>
+        <p class="note">El Reglamento de Copropiedad fija límite de duración, registro de invitados, cuidado del recinto y máximo de asistentes.</p>
+      </article>
+      <article class="card">
+        <h3>Gimnasio</h3>
+        <p>Se coordina directamente en Conserjería.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="tramites">
+    <h2>Gastos comunes, mudanzas y visitas</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Gastos comunes y pagos</h3>
+        <p>Consultas, pagos y contabilización de transferencias van a la Administración. Envía tu comprobante de transferencia por el WhatsApp operativo para que se identifique y se contabilice bien.</p>
+        <div class="rows">
+          <div class="row"><div class="txt"><span class="lab">WhatsApp</span><span class="val">+56 9 8659 7307</span></div><button class="copy" data-copy="+56 9 8659 7307">Copiar</button></div>
+          <div class="row"><div class="txt"><span class="lab">Correo</span><span class="val">adm.colbun@gmail.com</span></div><button class="copy" data-copy="adm.colbun@gmail.com">Copiar</button></div>
+        </div>
+      </article>
+      <article class="card">
+        <h3>Mudanzas</h3>
+        <p>Coordínalas con anticipación con la Administración. Antes de programar, pregunta por los horarios, requisitos y procedimientos vigentes.</p>
+        <div class="rows">
+          <div class="row"><div class="txt"><span class="lab">WhatsApp</span><span class="val">+56 9 8659 7307</span></div><button class="copy" data-copy="+56 9 8659 7307">Copiar</button></div>
+        </div>
+      </article>
+      <article class="card">
+        <h3>Estacionamientos de visita</h3>
+        <p>Son solo para visitas de residentes. Según el Reglamento de Copropiedad:</p>
+        <ul>
+          <li>Registra el vehículo en Conserjería e indica el departamento que visita.</li>
+          <li>El máximo es de 5 horas continuas por vehículo.</li>
+          <li>No se pueden usar como estacionamiento de residentes o propietarios.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section id="seguridad">
+    <h2>Seguridad</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Seguridad Ciudadana y Plan Cuadrante</h3>
+        <div class="rows">
+          <div class="row"><div class="txt"><span class="lab">Seguridad Ciudadana</span><span class="val">1512</span></div><button class="copy" data-copy="1512">Copiar</button></div>
+          <div class="row"><div class="txt"><span class="lab">Plan Cuadrante N.º 224</span><span class="val">+56 9 9529 3107</span></div><button class="copy" data-copy="+56 9 9529 3107">Copiar</button></div>
+        </div>
+        <p class="warn">Ante una emergencia inmediata, usa los canales oficiales: SAMU 131, Bomberos 132, Carabineros 133.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="convivencia">
+    <h2>Convivencia y reglas básicas</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>Para convivir bien</h3>
+        <ul>
+          <li>Evita ruidos o actividades que perturben el descanso de otros residentes.</li>
+          <li>No dejes basura, desperdicios ni escombros en espacios comunes.</li>
+          <li>Haz asados solo en los sectores habilitados.</li>
+          <li>Cuida ascensores, pasillos, jardines, salas y demás bienes comunes.</li>
+          <li>Informa a tiempo filtraciones o desperfectos que afecten a vecinos o bienes comunes.</li>
+          <li>Coordina con la Administración las mudanzas y trabajos que afecten espacios comunes.</li>
+        </ul>
+        <p class="note">Es un resumen práctico. Para casos específicos, consulta el Reglamento de Copropiedad.</p>
+      </article>
+      <article class="card">
+        <h3>Grupo de WhatsApp de residentes</h3>
+        <p>Sirve para avisos, información de interés común y coordinación entre vecinos.</p>
+        <p class="warn">El grupo no reemplaza los canales formales. Reclamos, denuncias y solicitudes que necesiten seguimiento van a la Administración o al Comité.</p>
+        <p class="note">Pedimos trato respetuoso y evitar spam, cadenas, discusiones políticas, descalificaciones personales y contenido ajeno a la comunidad.</p>
+        <p class="note">Para sumarte, marca la opción de WhatsApp en el registro de residentes.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="register" id="registro">
+    <h2>Registro de residentes</h2>
+    <p>Si vives en el edificio, como propietario o arrendatario, completa el formulario. El Comité y la Administración usan estos datos solo para el registro y para comunicarse contigo sobre temas de la comunidad.</p>
+    <a class="btn" href="https://forms.gle/K9iSBiJ6eKYEFLfu6" target="_blank" rel="noopener">Completar el registro</a>
+  </section>
+
+  <footer>
+    <p>Guía completa del residente y Reglamento de Copropiedad: <a href="https://bit.ly/guia-colbun" target="_blank" rel="noopener">bit.ly/guia-colbun</a></p>
+    <p>Información actualizada al 2 de octubre de 2026. Esta página no reemplaza el Reglamento de Copropiedad, los acuerdos de Asamblea ni los del Comité. Si hay diferencias, prevalece el documento oficial.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var ADM = {
+    who: "Administración REIC",
+    rows: [["Correo oficial", "adm.colbun@gmail.com"], ["WhatsApp operativo", "+56 9 8659 7307"]]
+  };
+  var PARQUE = {
+    who: "Administración del Parque",
+    rows: [["Marcelo Arellano", "+56 9 9359 9814"], ["Correo", "marcelo.arellano@empresasgardener.cl"]]
+  };
+  var TOPICS = [
+    { id: "edificio", label: "Problema en el edificio", c: ADM, why: "Para reclamos o solicitudes formales, usa el correo." },
+    { id: "gc", label: "Gastos comunes y pagos", c: ADM, why: "Envía también tus comprobantes de transferencia al WhatsApp." },
+    { id: "mudanza", label: "Mudanza u otra consulta operativa", c: ADM, why: "Coordina la mudanza antes de programarla." },
+    { id: "sala", label: "Sala Multiuso", c: { who: "App Comunidad Feliz y Conserjería", rows: [] }, why: "Reserva en la app y pide la llave en Conserjería." },
+    { id: "gym", label: "Gimnasio", c: { who: "Conserjería", rows: [] }, why: "El uso del gimnasio se coordina directamente allí." },
+    { id: "piscina", label: "Piscina", c: PARQUE, why: "La piscina la administra el Parque, no el edificio." },
+    { id: "parque", label: "Parque, canchas o quinchos", c: PARQUE, why: "Reserva canchas y quinchos en línea.", link: ["Reservar en AgendaPro", "https://parquecerrillos.agendapro.com/cl/"] },
+    { id: "comite", label: "Materia del Comité", c: { who: "Comité de Administración", rows: [["Correo del Comité", "comite.colbun@gmail.com"]] }, why: "Para lo cotidiano, escribe primero a la Administración." }
+  ];
+
+  var chips = document.getElementById("chips");
+  var answer = document.getElementById("answer");
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (m) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]; }); }
+
+  function show(id) {
+    var t = TOPICS.filter(function (x) { return x.id === id; })[0];
+    Array.prototype.forEach.call(chips.children, function (b) { b.setAttribute("aria-pressed", b.dataset.id === id ? "true" : "false"); });
+    var html = '<div class="who">' + esc(t.c.who) + '</div>';
+    if (t.c.rows.length) {
+      html += '<div class="rows">' + t.c.rows.map(function (r) {
+        return '<div class="row"><div class="txt"><span class="lab">' + esc(r[0]) + '</span><span class="val">' + esc(r[1]) + '</span></div><button class="copy" data-copy="' + esc(r[1]) + '">Copiar</button></div>';
+      }).join("") + '</div>';
+    }
+    html += '<p class="why">' + esc(t.why) + '</p>';
+    if (t.link) html += '<a class="btn" href="' + esc(t.link[1]) + '" target="_blank" rel="noopener">' + esc(t.link[0]) + '</a>';
+    answer.innerHTML = html;
+  }
+
+  TOPICS.forEach(function (t) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = t.label; b.dataset.id = t.id;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function () { show(t.id); });
+    chips.appendChild(b);
+  });
+  show("gc");
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest && e.target.closest(".copy");
+    if (!btn) return;
+    var text = btn.getAttribute("data-copy");
+    var val = btn.parentNode.querySelector(".val");
+    function done() { var old = btn.textContent; btn.textContent = "Copiado"; setTimeout(function () { btn.textContent = old; }, 1400); }
+    function fallback() {
+      try {
+        var r = document.createRange(); r.selectNodeContents(val);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        btn.textContent = "Seleccionado";
+        setTimeout(function () { btn.textContent = "Copiar"; }, 1400);
+      } catch (err) {}
+    }
+    try {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } catch (err) { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>
